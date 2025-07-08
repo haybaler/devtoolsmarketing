@@ -40,7 +40,7 @@ jobs:
         NVIDIA_API_KEY: ${{ secrets.NVIDIA_API_KEY }}
       run: |
         echo "Starting newsletter generation..."
-        python3 automation/simple_automation.py || python automation/simple_automation.py
+        python3 automation/newsletter_generator.py || python automation/newsletter_generator.py
         echo "Newsletter generation completed"
         ls -la newsletter/ || echo "Newsletter directory not found"
         

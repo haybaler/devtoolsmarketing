@@ -331,6 +331,6 @@ def main():
     
     print(f"\n📁 Full newsletter also saved to: {filename}")
     print("🔗 View it on GitHub: https://github.com/haybaler/devtoolsmarketing")
-
 if __name__ == "__main__":
     main()
+
