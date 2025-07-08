@@ -269,9 +269,21 @@ P.S. This GitHub issue is just a taste - our newsletter subscribers get 3x more 
         week_num = datetime.datetime.now().isocalendar()[1]
         filename = f"newsletter/auto-generated-week-{week_num}-2025.md"
         
-        os.makedirs("newsletter", exist_ok=True)
-        with open(filename, 'w') as f:
-            f.write(newsletter_content)
+        try:
+            os.makedirs("newsletter", exist_ok=True)
+            with open(filename, 'w', encoding='utf-8') as f:
+                f.write(newsletter_content)
+            print(f"✅ Newsletter saved successfully to: {filename}")
+        except Exception as e:
+            print(f"❌ Error saving newsletter: {e}")
+            # Try alternative path
+            filename = f"auto-generated-week-{week_num}-2025.md"
+            try:
+                with open(filename, 'w', encoding='utf-8') as f:
+                    f.write(newsletter_content)
+                print(f"✅ Newsletter saved to alternative location: {filename}")
+            except Exception as e2:
+                print(f"❌ Error saving to alternative location: {e2}")
         
         print("\n" + "=" * 50)
         print("🎉 AUTOMATION COMPLETE!")
@@ -316,8 +328,45 @@ That's it! You'll get copy-paste ready newsletter content! 🎯
 """)
 
 if __name__ == "__main__":
-    if len(sys.argv) > 1 and sys.argv[1] == "setup":
-        setup_instructions()
-    else:
-        automation = SimpleAutomation()
-        automation.run_weekly_automation()
+    try:
+        if len(sys.argv) > 1 and sys.argv[1] == "setup":
+            setup_instructions()
+        else:
+            print("🤖 Starting Developer Tools Automation...")
+            automation = SimpleAutomation()
+            automation.run_weekly_automation()
+            print("🎉 Automation completed successfully!")
+    except Exception as e:
+        print(f"❌ Error in automation: {e}")
+        print("📝 Creating fallback newsletter...")
+        
+        # Create minimal fallback newsletter
+        fallback_content = """🔥 Developer Tools Weekly
+
+Hey there!
+
+Our automated newsletter system encountered an issue, but we're still here with updates!
+
+🚀 Check out the latest trending developer tools on our GitHub repository:
+https://github.com/haybaler/devtoolsmarketing
+
+We'll have the full automated newsletter back up soon!
+
+Keep building! 🛠️
+[Your Name]
+"""
+        
+        try:
+            import datetime
+            import os
+            week_num = datetime.datetime.now().isocalendar()[1]
+            os.makedirs("newsletter", exist_ok=True)
+            filename = f"newsletter/fallback-week-{week_num}-2025.md"
+            with open(filename, 'w', encoding='utf-8') as f:
+                f.write(fallback_content)
+            print(f"✅ Fallback newsletter created: {filename}")
+        except Exception as e2:
+            print(f"❌ Could not create fallback: {e2}")
+        
+        # Re-raise the error for GitHub Actions to detect
+        raise

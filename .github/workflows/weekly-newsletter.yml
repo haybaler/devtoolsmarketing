@@ -25,6 +25,8 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install requests
+        # Install openai package for potential AI integration
+        pip install openai || echo "OpenAI package installation failed, continuing with fallback"
         
     - name: Generate newsletter
       env:
@@ -32,17 +34,36 @@ jobs:
         OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         NVIDIA_API_KEY: ${{ secrets.NVIDIA_API_KEY }}
       run: |
-        python automation/simple_automation.py
+        echo "Starting newsletter generation..."
+        python3 automation/simple_automation.py || python automation/simple_automation.py
+        echo "Newsletter generation completed"
+        ls -la newsletter/ || echo "Newsletter directory not found"
         
     - name: Commit and push newsletter
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
+        echo "Configuring git..."
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
-        git add newsletter/auto-generated-week-*.md
-        git commit -m "🤖 Auto-generated newsletter - $(date +%Y-%m-%d)" || exit 0
-        git push
+        
+        echo "Checking for newsletter files..."
+        ls -la newsletter/ || echo "Newsletter directory not found"
+        
+        echo "Adding newsletter files..."
+        git add newsletter/ || echo "No newsletter files to add"
+        
+        echo "Checking git status..."
+        git status
+        
+        echo "Attempting to commit..."
+        if git diff --staged --quiet; then
+          echo "No changes to commit"
+        else
+          git commit -m "🤖 Auto-generated newsletter - $(date +%Y-%m-%d)"
+          echo "Pushing changes..."
+          git push
+        fi
         
     - name: Create Issue with Newsletter Content
       uses: actions/github-script@v7
@@ -52,16 +73,26 @@ jobs:
           const fs = require('fs');
           const path = require('path');
           
-          // Find the latest newsletter file
-          const newsletterDir = 'newsletter';
-          const files = fs.readdirSync(newsletterDir)
-            .filter(file => file.startsWith('auto-generated-week-'))
-            .sort()
-            .reverse();
-          
-          if (files.length > 0) {
-            const latestFile = files[0];
-            const newsletterContent = fs.readFileSync(path.join(newsletterDir, latestFile), 'utf8');
+          try {
+            // Check if newsletter directory exists
+            if (!fs.existsSync('newsletter')) {
+              console.log('Newsletter directory does not exist');
+              return;
+            }
+            
+            // Find the latest newsletter file
+            const newsletterDir = 'newsletter';
+            const files = fs.readdirSync(newsletterDir)
+              .filter(file => file.startsWith('auto-generated-week-'))
+              .sort()
+              .reverse();
+            
+            console.log('Found newsletter files:', files);
+            
+            if (files.length > 0) {
+              const latestFile = files[0];
+              console.log('Reading file:', latestFile);
+              const newsletterContent = fs.readFileSync(path.join(newsletterDir, latestFile), 'utf8');
             
             await github.rest.issues.create({
               owner: context.repo.owner,
@@ -104,6 +135,35 @@ ${newsletterContent}
 ### 🤖 *This issue was automatically created by our newsletter automation system*
 
 **⭐ Like what you see? Star this repo and follow for daily updates!**`,
-              labels: ['newsletter', 'automation', 'ready-to-send']
+                labels: ['newsletter', 'automation', 'ready-to-send']
+              });
+              
+              console.log('Newsletter issue created successfully');
+            } else {
+              console.log('No newsletter files found');
+            }
+          } catch (error) {
+            console.error('Error in newsletter automation:', error);
+            // Create an error issue instead
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `⚠️ Newsletter Automation Error - ${new Date().toISOString().slice(0, 10)}`,
+              body: `## 🚨 Newsletter Automation Encountered an Error
+
+**Error Details:**
+\`\`\`
+${error.message}
+\`\`\`
+
+**Time:** ${new Date().toISOString()}
+
+**Next Steps:**
+1. Check the GitHub Actions logs for more details
+2. Manually run the automation script if needed
+3. Contact support if the issue persists
+
+This error issue was automatically created by the newsletter automation system.`,
+              labels: ['bug', 'automation', 'needs-attention']
             });
           }
