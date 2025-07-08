@@ -94,43 +94,28 @@ jobs:
               const newsletterContent = fs.readFileSync(path.join(newsletterDir, latestFile), 'utf8');
               
               // Create the issue body
-              const issueBody = `## Your Developer Tools Newsletter is Ready!
-
-> **Hey GitHub visitors!** This is a **FREE preview** of our developer tools newsletter. Want the **full experience** with exclusive founder interviews, live demos, and early access to trending tools? [**Subscribe here for free!**](YOUR_NEWSLETTER_LINK)
-
-**Copy-paste ready content below:**
-
----
-
-${newsletterContent}
-
----
-
-## Next Steps (For Newsletter Owner):
-1. **Copy** the content above
-2. **Paste** into your newsletter editor (Substack, ConvertKit, etc.)
-3. **Send** to your subscribers!
-
----
-
-## Want More Premium Content Like This?
-
-### **Subscribe to Our Newsletter for Exclusive Access:**
-- **Founder Interviews**: 1-on-1 with creators of trending tools
-- **Live Product Demos**: Watch tools in action before everyone else  
-- **Monthly Webinars**: Q&A with dev tool leaders
-- **Early Access**: See tools before they hit GitHub trending
-- **Deep Analysis**: Market insights and investment patterns
-- **Community**: Join 10,000+ developers and VCs
-
-**[Subscribe Free - No Spam, Just Value](YOUR_NEWSLETTER_LINK)**
-
----
-
-### File Location: \`${latestFile}\`
-### *This issue was automatically created by our newsletter automation system*
-
-**Like what you see? Star this repo and follow for daily updates!**`;
+              const issueBody = "## Your Developer Tools Newsletter is Ready!\n\n" +
+                "> **Hey GitHub visitors!** This is a **FREE preview** of our developer tools newsletter. " +
+                "Want the **full experience** with exclusive founder interviews, live demos, and early access to trending tools? " +
+                "[**Subscribe here for free!**](YOUR_NEWSLETTER_LINK)\n\n" +
+                "**Copy-paste ready content below:**\n\n---\n\n" +
+                newsletterContent + "\n\n---\n\n" +
+                "## Next Steps (For Newsletter Owner):\n" +
+                "1. **Copy** the content above\n" +
+                "2. **Paste** into your newsletter editor (Substack, ConvertKit, etc.)\n" +
+                "3. **Send** to your subscribers!\n\n---\n\n" +
+                "## Want More Premium Content Like This?\n\n" +
+                "### **Subscribe to Our Newsletter for Exclusive Access:**\n" +
+                "- **Founder Interviews**: 1-on-1 with creators of trending tools\n" +
+                "- **Live Product Demos**: Watch tools in action before everyone else\n" +
+                "- **Monthly Webinars**: Q&A with dev tool leaders\n" +
+                "- **Early Access**: See tools before they hit GitHub trending\n" +
+                "- **Deep Analysis**: Market insights and investment patterns\n" +
+                "- **Community**: Join 10,000+ developers and VCs\n\n" +
+                "**[Subscribe Free - No Spam, Just Value](YOUR_NEWSLETTER_LINK)**\n\n---\n\n" +
+                "### File Location: `" + latestFile + "`\n" +
+                "### *This issue was automatically created by our newsletter automation system*\n\n" +
+                "**Like what you see? Star this repo and follow for daily updates!**";
               
               await github.rest.issues.create({
                 owner: context.repo.owner,
