@@ -93,12 +93,12 @@ jobs:
               const latestFile = files[0];
               console.log('Reading file:', latestFile);
               const newsletterContent = fs.readFileSync(path.join(newsletterDir, latestFile), 'utf8');
-            
-            await github.rest.issues.create({
+              
+              await github.rest.issues.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
               title: `📧 Newsletter Ready - ${new Date().toISOString().slice(0, 10)}`,
-              body: `## 🚀 Your Developer Tools Newsletter is Ready!
+              body: \`## 🚀 Your Developer Tools Newsletter is Ready!
 
 > 👋 **Hey GitHub visitors!** This is a **FREE preview** of our developer tools newsletter. Want the **full experience** with exclusive founder interviews, live demos, and early access to trending tools? [**Subscribe here for free!**](YOUR_NEWSLETTER_LINK)
 
