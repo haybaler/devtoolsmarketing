@@ -93,8 +93,8 @@ jobs:
               console.log('Reading file:', latestFile);
               const newsletterContent = fs.readFileSync(path.join(newsletterDir, latestFile), 'utf8');
               
-                             // Create the issue body
-               const issueBody = `## Your Developer Tools Newsletter is Ready!
+              // Create the issue body
+              const issueBody = `## Your Developer Tools Newsletter is Ready!
 
 > **Hey GitHub visitors!** This is a **FREE preview** of our developer tools newsletter. Want the **full experience** with exclusive founder interviews, live demos, and early access to trending tools? [**Subscribe here for free!**](YOUR_NEWSLETTER_LINK)
 
