@@ -25,6 +25,7 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install requests
+        # Install openai package for potential AI integration
         pip install openai || echo "OpenAI package installation failed, continuing with fallback"
         
     - name: Generate newsletter
@@ -93,8 +94,11 @@ jobs:
               console.log('Reading file:', latestFile);
               const newsletterContent = fs.readFileSync(path.join(newsletterDir, latestFile), 'utf8');
               
-              // Create the issue body
-              const issueBody = `## 🚀 Your Developer Tools Newsletter is Ready!
+              await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `📧 Newsletter Ready - ${new Date().toISOString().slice(0, 10)}`,
+              body: \`## 🚀 Your Developer Tools Newsletter is Ready!
 
 > 👋 **Hey GitHub visitors!** This is a **FREE preview** of our developer tools newsletter. Want the **full experience** with exclusive founder interviews, live demos, and early access to trending tools? [**Subscribe here for free!**](YOUR_NEWSLETTER_LINK)
 
@@ -130,13 +134,7 @@ ${newsletterContent}
 ### 📁 File Location: \`${latestFile}\`
 ### 🤖 *This issue was automatically created by our newsletter automation system*
 
-**⭐ Like what you see? Star this repo and follow for daily updates!**`;
-              
-              await github.rest.issues.create({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                title: `📧 Newsletter Ready - ${new Date().toISOString().slice(0, 10)}`,
-                body: issueBody,
+**⭐ Like what you see? Star this repo and follow for daily updates!**`,
                 labels: ['newsletter', 'automation', 'ready-to-send']
               });
               
