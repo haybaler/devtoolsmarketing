@@ -4,7 +4,7 @@
 
 ## 🎯 What You Get
 
-Every **Monday at 10 AM**, you'll automatically receive:
+Every **other day at 10 AM UTC** (Mon, Wed, Fri, Sun), you'll automatically receive:
 - 📧 **Copy-paste ready newsletter content** 
 - 🔥 **Trending developer tools** from GitHub
 - 💰 **Latest funding news** and market insights
@@ -12,9 +12,19 @@ Every **Monday at 10 AM**, you'll automatically receive:
 
 ## 🚀 Super Simple Setup (2 minutes)
 
-### Step 1: Optional OpenAI Enhancement
-If you want AI-generated content (recommended), add your OpenAI API key:
+### Step 1: Optional AI Enhancement
+Choose your preferred AI service (or use both for redundancy):
 
+#### Option A: NVIDIA NIM (Recommended - Fast & Cheap)
+1. Go to [NVIDIA Build](https://build.nvidia.com/)
+2. Sign up for free account
+3. Get API key for Llama 3.1 405B model
+4. In your GitHub repository, go to **Settings > Secrets and Variables > Actions**
+5. Add secret: `NVIDIA_API_KEY` with your key
+
+**Cost**: Often cheaper than OpenAI, great free tier
+
+#### Option B: OpenAI (Classic Choice)
 1. Go to [OpenAI API Keys](https://platform.openai.com/api-keys)
 2. Create a new key
 3. In your GitHub repository, go to **Settings > Secrets and Variables > Actions**
@@ -23,13 +33,13 @@ If you want AI-generated content (recommended), add your OpenAI API key:
 **Cost**: ~$5-20/month depending on usage
 
 ### Step 2: That's It!
-The automation runs automatically every Monday. No other setup needed!
+The automation runs automatically every other day. No other setup needed!
 
 ## 📅 How It Works
 
-### Every Monday 10 AM UTC:
+### Every Other Day at 10 AM UTC (Mon, Wed, Fri, Sun):
 1. **🤖 Automation runs** - Finds trending developer tools
-2. **📝 Content generated** - Creates newsletter with latest discoveries
+2. **🧠 AI generates content** - Uses NVIDIA NIM or OpenAI for enhanced content
 3. **📧 Issue created** - GitHub issue with copy-paste ready content
 4. **🔔 You get notified** - Check your GitHub notifications
 
@@ -81,8 +91,9 @@ python3 automation/simple_automation.py
 
 - **GitHub Actions**: FREE
 - **GitHub API**: FREE  
-- **OpenAI API**: ~$5-20/month (optional)
-- **Total**: $0-20/month
+- **NVIDIA NIM API**: FREE tier available, very cheap paid tiers
+- **OpenAI API**: ~$5-20/month (optional alternative)
+- **Total**: $0-20/month (often $0 with NVIDIA NIM free tier)
 
 ## 🎯 Benefits
 
@@ -108,4 +119,4 @@ If something breaks:
 
 ---
 
-**🎉 You're all set!** Your first automated newsletter will be ready next Monday at 10 AM UTC!
+**🎉 You're all set!** Your first automated newsletter will be ready on the next scheduled day (Mon, Wed, Fri, or Sun) at 10 AM UTC!

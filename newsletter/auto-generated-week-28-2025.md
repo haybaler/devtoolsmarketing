@@ -11,7 +11,7 @@ Why it's hot: Revolutionary AI-first approach to coding
 
 📈 TRENDING ON GITHUB:
 
-1. cline - 47174 ⭐
+1. cline - 47173 ⭐
    Autonomous coding agent right in your IDE, capable of creating/editing files, executing commands, us...
    Language: TypeScript | https://github.com/cline/cline
 

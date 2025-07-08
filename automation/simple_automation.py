@@ -16,6 +16,7 @@ class SimpleAutomation:
     def __init__(self):
         self.github_token = os.getenv('GITHUB_TOKEN')  # Free GitHub API
         self.openai_key = os.getenv('OPENAI_API_KEY')   # OpenAI API (~$20/month)
+        self.nvidia_api_key = os.getenv('NVIDIA_API_KEY')  # NVIDIA NIM API
         
     def get_trending_repos(self) -> List[Dict]:
         """Get trending developer tools from GitHub (FREE API)"""
@@ -91,9 +92,9 @@ class SimpleAutomation:
         }
     
     def generate_newsletter_with_ai(self, github_data: List[Dict], highlights: Dict) -> str:
-        """Generate newsletter content using OpenAI (cheap API)"""
+        """Generate newsletter content using AI (OpenAI or NVIDIA NIM)"""
         
-        # Simple prompt for OpenAI
+        # Simple prompt for AI
         prompt = f"""
         Create a weekly developer tools newsletter based on this data:
         
@@ -115,31 +116,71 @@ class SimpleAutomation:
         Maximum 300 words total.
         """
         
-        try:
-            # Simple OpenAI API call (you can use gpt-3.5-turbo for cheaper option)
+        # Try NVIDIA NIM first (often faster and cheaper)
+        if self.nvidia_api_key:
             try:
-                import openai
-            except ImportError:
-                print("OpenAI package not installed. Using fallback newsletter generation.")
-                return self.generate_fallback_newsletter(github_data, highlights)
-            
-            openai.api_key = self.openai_key
-            
-            response = openai.ChatCompletion.create(
-                model="gpt-3.5-turbo",  # Cheaper than GPT-4
-                messages=[
-                    {"role": "system", "content": "You are a tech newsletter writer who creates engaging, concise content about developer tools."},
-                    {"role": "user", "content": prompt}
-                ],
-                max_tokens=800,
-                temperature=0.7
-            )
-            
-            return response.choices[0].message.content
-            
-        except Exception as e:
-            print(f"OpenAI API error: {e}")
-            return self.generate_fallback_newsletter(github_data, highlights)
+                return self.generate_with_nvidia_nim(prompt)
+            except Exception as e:
+                print(f"NVIDIA NIM API error: {e}, falling back to OpenAI...")
+        
+        # Try OpenAI if NVIDIA NIM fails or not available
+        if self.openai_key:
+            try:
+                return self.generate_with_openai(prompt)
+            except Exception as e:
+                print(f"OpenAI API error: {e}, using fallback...")
+        
+        # Use fallback if no AI APIs available
+        return self.generate_fallback_newsletter(github_data, highlights)
+    
+    def generate_with_nvidia_nim(self, prompt: str) -> str:
+        """Generate content using NVIDIA NIM API"""
+        import requests
+        
+        # NVIDIA NIM API endpoint (you can use various models)
+        url = "https://integrate.api.nvidia.com/v1/chat/completions"
+        
+        headers = {
+            "Authorization": f"Bearer {self.nvidia_api_key}",
+            "Content-Type": "application/json"
+        }
+        
+        data = {
+            "model": "meta/llama-3.1-405b-instruct",  # Fast and good model
+            "messages": [
+                {"role": "system", "content": "You are a tech newsletter writer who creates engaging, concise content about developer tools."},
+                {"role": "user", "content": prompt}
+            ],
+            "max_tokens": 800,
+            "temperature": 0.7
+        }
+        
+        response = requests.post(url, headers=headers, json=data)
+        response.raise_for_status()
+        
+        return response.json()["choices"][0]["message"]["content"]
+    
+    def generate_with_openai(self, prompt: str) -> str:
+        """Generate content using OpenAI API"""
+        try:
+            import openai
+        except ImportError:
+            print("OpenAI package not installed. Using fallback newsletter generation.")
+            raise ImportError("OpenAI package not available")
+        
+        openai.api_key = self.openai_key
+        
+        response = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",  # Cheaper than GPT-4
+            messages=[
+                {"role": "system", "content": "You are a tech newsletter writer who creates engaging, concise content about developer tools."},
+                {"role": "user", "content": prompt}
+            ],
+            max_tokens=800,
+            temperature=0.7
+        )
+        
+        return response.choices[0].message.content
     
     def generate_fallback_newsletter(self, github_data: List[Dict], highlights: Dict) -> str:
         """Fallback newsletter if OpenAI fails"""
@@ -240,7 +281,15 @@ def setup_instructions():
    • Generate token with 'public_repo' scope
    • Set: export GITHUB_TOKEN=your_token
 
-2. Get OpenAI Key (optional, ~$20/month):
+2. Get AI API Key (optional, for enhanced content):
+   
+   OPTION A - NVIDIA NIM (Recommended - Fast & Cheap):
+   • Go to: https://build.nvidia.com/
+   • Sign up for free account
+   • Get API key for Llama 3.1 405B
+   • Set: export NVIDIA_API_KEY=your_key
+   
+   OPTION B - OpenAI (~$20/month):
    • Go to: https://platform.openai.com/api-keys
    • Create new key
    • Set: export OPENAI_API_KEY=your_key
