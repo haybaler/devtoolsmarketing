@@ -109,6 +109,7 @@ Want to customize the content? Edit:
 - `automation/simple_automation.py` - Main script
 - `get_manual_weekly_highlights()` - Weekly featured tools
 - `.github/workflows/weekly-newsletter.yml` - Automation schedule
+- `README.md` - Update categories here and the automation will pick them up
 
 ## 📞 Support
 
