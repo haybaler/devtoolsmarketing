@@ -19,7 +19,7 @@ Why it's hot: Revolutionary AI-first approach to coding
    Daytona is a Secure and Elastic Infrastructure for Running AI-Generated Code...
    Language: TypeScript | https://github.com/daytonaio/daytona
 
-3. onlook - 20485 ⭐
+3. onlook - 20486 ⭐
    The Cursor for Designers • An Open-Source Visual Vibecoding Editor • Visually build, style, and edit...
    Language: TypeScript | https://github.com/onlook-dev/onlook
 
