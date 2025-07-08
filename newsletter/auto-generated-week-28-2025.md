@@ -11,7 +11,7 @@ Why it's hot: Revolutionary AI-first approach to coding
 
 📈 TRENDING ON GITHUB:
 
-1. cline - 47184 ⭐
+1. cline - 47204 ⭐
    Autonomous coding agent right in your IDE, capable of creating/editing files, executing commands, us...
    Language: TypeScript | https://github.com/cline/cline
 
@@ -19,7 +19,7 @@ Why it's hot: Revolutionary AI-first approach to coding
    Daytona is a Secure and Elastic Infrastructure for Running AI-Generated Code...
    Language: TypeScript | https://github.com/daytonaio/daytona
 
-3. onlook - 20486 ⭐
+3. onlook - 20497 ⭐
    The Cursor for Designers • An Open-Source Visual Vibecoding Editor • Visually build, style, and edit...
    Language: TypeScript | https://github.com/onlook-dev/onlook
 
