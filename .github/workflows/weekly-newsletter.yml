@@ -120,7 +120,7 @@ jobs:
               await github.rest.issues.create({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
-                title: `Newsletter Ready - ${new Date().toISOString().slice(0, 10)}`,
+                title: "Newsletter Ready - " + new Date().toISOString().slice(0, 10),
                 body: issueBody,
                 labels: ['newsletter', 'automation', 'ready-to-send']
               });
@@ -135,22 +135,15 @@ jobs:
             await github.rest.issues.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              title: `Newsletter Automation Error - ${new Date().toISOString().slice(0, 10)}`,
-              body: `## Newsletter Automation Encountered an Error
-
-**Error Details:**
-\`\`\`
-${error.message}
-\`\`\`
-
-**Time:** ${new Date().toISOString()}
-
-**Next Steps:**
-1. Check the GitHub Actions logs for more details
-2. Manually run the automation script if needed
-3. Contact support if the issue persists
-
-This error issue was automatically created by the newsletter automation system.`,
+              title: "Newsletter Automation Error - " + new Date().toISOString().slice(0, 10),
+              body: "## Newsletter Automation Encountered an Error\n\n" +
+                "**Error Details:**\n```\n" + error.message + "\n```\n\n" +
+                "**Time:** " + new Date().toISOString() + "\n\n" +
+                "**Next Steps:**\n" +
+                "1. Check the GitHub Actions logs for more details\n" +
+                "2. Manually run the automation script if needed\n" +
+                "3. Contact support if the issue persists\n\n" +
+                "This error issue was automatically created by the newsletter automation system.",
               labels: ['bug', 'automation', 'needs-attention']
             });
           }
