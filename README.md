@@ -26,11 +26,13 @@ Our mission is to create the most comprehensive and up-to-date directory of deve
 - **Intelligent Testing & Debugging**
 - **Natural Language to Code**
 
-### 💻 Editors & IDEs
-- **AI-Enhanced Editors**
-- **Cloud-Based IDEs**
-- **Specialized Development Environments**
-- **Code Collaboration Platforms**
+### 💻 **[Editors & IDEs](./tools/editors-ides/)**
+*Complete guide to code editors, IDEs, and development environments*
+- **AI-Enhanced Editors**: Cursor ($9.9B), Windsurf, GitHub Copilot, Codeium, Tabnine
+- **Traditional IDEs**: VSCode (70M+ users), JetBrains Suite, Visual Studio
+- **Cloud-Based IDEs**: Replit, Gitpod, CodeSandbox, StackBlitz, GitHub Codespaces
+- **Extensions & Plugins**: 50+ essential add-ons for supercharging your editor
+- **85+ Tools Total** | **Market Size**: $2.5B annually | **AI Growth**: 300%+ YoY
 
 ### 🚀 Development Acceleration
 - **Low-Code/No-Code Platforms**
