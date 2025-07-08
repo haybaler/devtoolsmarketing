@@ -63,11 +63,17 @@ jobs:
         
         echo "Attempting to commit..."
         if git diff --staged --quiet; then
-          echo "No changes to commit"
+          echo "✅ No newsletter changes this week - content already up to date"
         else
+          echo "📝 Committing new newsletter content..."
           git commit -m "Auto-generated newsletter - $(date +%Y-%m-%d)"
-          echo "Pushing changes..."
-          git push
+          echo "📤 Pushing changes to repository..."
+          if git push; then
+            echo "✅ Successfully pushed newsletter update!"
+          else
+            echo "❌ Failed to push changes. Check repository permissions."
+            exit 1
+          fi
         fi
         
     - name: Create Issue with Newsletter Content
