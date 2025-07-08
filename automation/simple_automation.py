@@ -18,37 +18,76 @@ class EnhancedAutomation:
         self.openai_key = os.getenv('OPENAI_API_KEY')   # OpenAI API (~$20/month)
         self.nvidia_api_key = os.getenv('NVIDIA_API_KEY')  # NVIDIA NIM API
         
+    def parse_readme_categories(self) -> Dict[str, List[str]]:
+        """Parse README.md and extract categories with bullet items as queries."""
+        import re
+
+        readme_path = os.path.join(os.path.dirname(__file__), '..', 'README.md')
+        categories: Dict[str, List[str]] = {}
+
+        try:
+            with open(readme_path, 'r', encoding='utf-8') as f:
+                lines = f.readlines()
+        except FileNotFoundError:
+            print('README.md not found - using fallback categories')
+            return {}
+
+        in_section = False
+        current = None
+
+        for line in lines:
+            if line.startswith('## ') and 'Categories' in line:
+                in_section = True
+                continue
+
+            if in_section:
+                if line.startswith('## ') and 'Categories' not in line:
+                    break
+                if line.startswith('### '):
+                    current = re.sub(r'^###\s+', '', line).strip()
+                    categories[current] = []
+                    continue
+                if line.startswith('-') and current:
+                    bullet = re.sub(r'[*`\-]', '', line).strip()
+                    bullet = bullet.split(':')[0].strip()
+                    if bullet:
+                        categories[current].append(bullet)
+
+        return categories
+
     def get_trending_repos_by_category(self) -> Dict[str, List[Dict]]:
         """Get trending developer tools organized by category"""
-        
-        # Enhanced category searches based on README
-        categories = {
-            "AI Development": [
-                "AI code generation", "AI pair programming", "AI coding assistant",
-                "AI code review", "AI testing", "natural language to code"
-            ],
-            "Editors & IDEs": [
-                "code editor", "IDE", "development environment", "text editor",
-                "VS Code extension", "vim plugin"
-            ],
-            "Infrastructure & DevOps": [
-                "cloud deployment", "CI/CD", "docker", "kubernetes",
-                "monitoring", "observability", "infrastructure"
-            ],
-            "Frontend & Mobile": [
-                "React tools", "Vue tools", "Angular tools", "mobile development",
-                "UI components", "design system", "frontend framework"
-            ],
-            "Backend & Data": [
-                "API development", "database tools", "authentication",
-                "microservices", "backend framework", "data pipeline"
-            ],
-            "Testing & QA": [
-                "testing framework", "automated testing", "performance testing",
-                "security testing", "code quality", "linting"
-            ]
-        }
-        
+
+        categories = self.parse_readme_categories()
+        if not categories:
+            # Fallback static categories if README parsing fails
+            categories = {
+                "AI Development": [
+                    "AI code generation", "AI pair programming", "AI coding assistant",
+                    "AI code review", "AI testing", "natural language to code"
+                ],
+                "Editors & IDEs": [
+                    "code editor", "IDE", "development environment", "text editor",
+                    "VS Code extension", "vim plugin"
+                ],
+                "Infrastructure & DevOps": [
+                    "cloud deployment", "CI/CD", "docker", "kubernetes",
+                    "monitoring", "observability", "infrastructure"
+                ],
+                "Frontend & Mobile": [
+                    "React tools", "Vue tools", "Angular tools", "mobile development",
+                    "UI components", "design system", "frontend framework"
+                ],
+                "Backend & Data": [
+                    "API development", "database tools", "authentication",
+                    "microservices", "backend framework", "data pipeline"
+                ],
+                "Testing & QA": [
+                    "testing framework", "automated testing", "performance testing",
+                    "security testing", "code quality", "linting"
+                ]
+            }
+
         trending_by_category = {}
         
         for category, queries in categories.items():

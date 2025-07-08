@@ -40,7 +40,7 @@ jobs:
         NVIDIA_API_KEY: ${{ secrets.NVIDIA_API_KEY }}
       run: |
         echo "Starting newsletter generation..."
-        python3 automation/simple_automation.py || python automation/simple_automation.py
+        python3 automation/newsletter_generator.py || python automation/newsletter_generator.py
         echo "Newsletter generation completed"
         ls -la newsletter/ || echo "Newsletter directory not found"
         
@@ -112,50 +112,13 @@ jobs:
             const currentDate = new Date().toISOString().slice(0, 10);
             const issueTitle = 'Newsletter Ready - ' + currentDate;
             
-            const issueBodyParts = [
-              '## Your Developer Tools Newsletter is Ready!',
-              '',
-              '> **Hey GitHub visitors!** This is a **FREE preview** of our developer tools newsletter. Want the **full experience** with exclusive founder interviews, live demos, and early access to trending tools?',
-              '[**Subscribe here for free!**](YOUR_NEWSLETTER_LINK)',
-              '',
-              '**Copy-paste ready content below:**',
-              '',
-              '---',
-              '',
-              newsletterContent,
-              '',
-              '---',
-              '',
-              '## Next Steps (For Newsletter Owner):',
-              '',
-              '1. **Copy** the content above',
-              '2. **Paste** into your newsletter editor (Substack, ConvertKit, etc.)',
-              '3. **Send** to your subscribers!',
-              '',
-              '---',
-              '',
-              '## Want More Premium Content Like This?',
-              '',
-              '### **Subscribe to Our Newsletter for Exclusive Access:**',
-              '- **Founder Interviews**',
-              '- **Live Product Demos**',
-              '- **Monthly Webinars**',
-              '- **Early Access**',
-              '- **Deep Analysis**',
-              '- **Community**',
-              '',
-              '**[Subscribe Free - No Spam, Just Value](YOUR_NEWSLETTER_LINK)**',
-              '',
-              '---',
-              '',
-              '### File Location: ' + latestFile,
-              '*This issue was automatically created by our newsletter automation system*',
-              '',
-              '**Like what you see? Star this repo and follow for daily updates!**'
-            ];
             
-            const issueBody = issueBodyParts.join('\n');
-            
+            const templatePath = path.join('.github', 'ISSUE_TEMPLATE', 'newsletter_ready.md');
+            let issueBody = fs.readFileSync(templatePath, 'utf8');
+
+            issueBody = issueBody
+              .replace('{{newsletter_content}}', newsletterContent)
+              .replace('{{file}}', latestFile);
             console.log('Creating GitHub issue...');
             
             const response = await github.rest.issues.create({
