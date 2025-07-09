@@ -123,7 +123,7 @@ Coming up in next week's digest:
 - **Subscribers**: 10,247 developers, VCs, and tech enthusiasts
 - **Open Rate**: 47.3% (industry average: 21.3%)
 - **Click Rate**: 12.8% (industry average: 2.6%)
-- **Next Edition**: July 15, 2025
+- **Next Edition**: July 16, 2025
 
 ---
 
